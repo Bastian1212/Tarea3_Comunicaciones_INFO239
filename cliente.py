@@ -72,7 +72,7 @@ if __name__ == '__main__':
     
 
     #Envia mensaje de terminado al server
-    UDPClientSocket.sendto(str.encode("listo"), serverAddressPort)
+    UDPClientSocket.sendto(str.encode("listo"+ idClient), serverAddressPort)
     os.system("clear")
     print("-----------------------------------------------------------------------------")
     texto = recibirRespuestaS(bufferSize)[2:]

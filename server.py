@@ -57,9 +57,13 @@ while(True):
         nombres.append([])
         
     else : 
-        ## id del cliente con la cual estamos conversdando 
-        idClientAct = int(ClientM[4]) 
-        if(ClientM!= "b'listo'"):
+        ## id del cliente con la cual estamos conversdando
+        if str(ClientM)[4].isnumeric():
+            idClientAct = int(ClientM[4])    
+        else: 
+            idClientAct = int(ClientM[7])   
+        
+        if(ClientM!= "b'listo"+str(idClientAct)+"'"):
                
             caracter = str(ClientM[3])
             nombres[idClientAct-1] += caracter
@@ -73,11 +77,12 @@ while(True):
            
             print("se enviara el mensaje recibido")
             textonombre = ""
-            listo =  nombres[idClientAct-1]
-            for i in nombres:
+            lista=  nombres[idClientAct-1]
+            for i in lista:
                 textonombre+=i
             envioMsg(textonombre, address)
-            break
+            nombres.pop(idClientAct-1)
+            print(nombres)
 
 
 
