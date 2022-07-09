@@ -43,35 +43,40 @@ if __name__ == '__main__':
     print("Cliente : ", idClient)
     print("para finalizar escriba : terminar ")
 
-    msgServer = ""
+    msgToServer = ""
     cont = 1    
     
-    while (msgServer != "terminar"):
+    while (msgToServer != "terminar"):
 
-        msgServer = str(input("Ingrese su nombre por caracter : ")).lower()
+        msgToServer = str(input("Ingrese su nombre por caracter : ")).lower()
 
-        if (msgServer  != "terminar"):
+        if (msgToServer  != "terminar"):
             
             ## se envia el mensaje al servidor 
             print("enviando mensaje")
-            envioMsg(msgServer,serverAddressPort)
+            envioMsg(msgToServer,serverAddressPort)
             print("esperando respuesta del servidor ")
             respuesta = recibirRespuestaS(bufferSize) 
+
             while(respuesta =="b'NAK'"):
                 print("Hubo una perdida del mensaje")
-                envioMsg(msgServer,serverAddressPort)
+                envioMsg(msgToServer,serverAddressPort)
                 respuesta = recibirRespuestaS(bufferSize)
                 time.sleep(2)
+
+
             if(respuesta=="b'ACK'"):
                 print("el mensaje se recibio con exito")
                 cont+=1
             
 
-
+# BASTIAN
+# B1, A2, S3 ...
+# B2, A3, S4, T5, I6, A7, N0
 
     
 
-    #Envia mensaje de terminado al server
+    #Envia un mensaje del formato "terminado" al server
     UDPClientSocket.sendto(str.encode("listo"+ idClient), serverAddressPort)
     os.system("clear")
     print("-----------------------------------------------------------------------------")

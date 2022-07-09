@@ -46,7 +46,7 @@ while(True):
     message,address = reciboMsj(bufferSize)
     ClientM = str(message)
     print("mensaje recibido")
-    ## si se  conecta un cliente 
+    ## si se  conecta un cliente nuevo
     if(ClientM == "b'conect'" ):
         os.system("clear")
         print("conectando ")
@@ -55,34 +55,59 @@ while(True):
         envioMsg(str(idClient),address)
         ## agrega una lista a nuestra lista nombres donde se almacenaran los caracteres 
         nombres.append([])
-        
+    
+    # Empieza a recibir mensajes    
     else : 
-        ## id del cliente con la cual estamos conversdando
+        ## id del cliente con la cual estamos conversando
+        # Si es un caracter, el id estara en la pos 4
         if str(ClientM)[4].isnumeric():
             idClientAct = int(ClientM[4])    
+
+        # Si se quiere terminar el proceso, se recibira un mensaje mas 
+        # largo por lo que el id estara en la pos 7
         else: 
             idClientAct = int(ClientM[7])   
         
+        # Si el mensaje recibido no es de la formato para terminar el proceso,
+        # se recibe el mensaje y se envia un ACK
         if(ClientM!= "b'listo"+str(idClientAct)+"'"):
-               
             caracter = str(ClientM[3])
-            nombres[idClientAct-1] += caracter
-            print(nombres)
+
+            if(idClientAct>len(nombres)):
+                nombres[idClientAct-2] += caracter
+                print(nombres)
+            else:
+                nombres[idClientAct-1] += caracter
+                print(nombres)
+            
+            
+
+# A = [ [] ] id = 2  / len = 1
+# 
 
             ## envia un mensaje de confirmacion al cliente
             msgFromServer ="ACK"
             print("enviando respuesta al cliente ")
             envioMsg(msgFromServer,address)
+        # Si el mensaje recibido es del formato "terminar proceso", se entrega
+        # el mensaje al usuario y se elimina de la memoria.
         else:
-           
+            if(idClientAct>len(nombres)):
+                aux = 2
+            else:
+                aux = 1
+
             print("se enviara el mensaje recibido")
             textonombre = ""
-            lista=  nombres[idClientAct-1]
-            for i in lista:
-                textonombre+=i
-            envioMsg(textonombre, address)
-            nombres.pop(idClientAct-1)
+            lista = nombres[idClientAct-aux]
+            if(len(nombres)>=1):
+                for i in lista:
+                    textonombre+=i
+                envioMsg(textonombre, address)
+                # Se elimina el mensaje del server
+                nombres.pop(idClientAct-aux)
             print(nombres)
+            idClientAct = 0 
 
 
 
