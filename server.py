@@ -55,18 +55,29 @@ while(True):
         envioMsg(str(idClient),address)
         ## agrega una lista a nuestra lista nombres donde se almacenaran los caracteres 
         nombres.append([])
-        idClientAct = idClient
+        
     else : 
-        print(ClientM[3])
-        caracter = str(ClientM[3])
-        nombres[idClientAct-1] += caracter
-        print(nombres)
+        ## id del cliente con la cual estamos conversdando 
+        idClientAct = int(ClientM[4]) 
+        if(ClientM!= "b'listo'"):
+               
+            caracter = str(ClientM[3])
+            nombres[idClientAct-1] += caracter
+            print(nombres)
 
-        ## envia un mensaje de confirmacion al cliente
-        msgFromServer ="ACK"
-        print("enviando respuesta al cliente ")
-        envioMsg(msgFromServer,address)
-
+            ## envia un mensaje de confirmacion al cliente
+            msgFromServer ="ACK"
+            print("enviando respuesta al cliente ")
+            envioMsg(msgFromServer,address)
+        else:
+           
+            print("se enviara el mensaje recibido")
+            textonombre = ""
+            listo =  nombres[idClientAct-1]
+            for i in nombres:
+                textonombre+=i
+            envioMsg(textonombre, address)
+            break
 
 
 

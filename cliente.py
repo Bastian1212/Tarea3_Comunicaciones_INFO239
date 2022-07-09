@@ -7,7 +7,9 @@ def envioMsg(msg, direccion):
     bytesToSend =str.encode(str(cont)+msg[0]+idClient)
     UDPClientSocket.sendto(bytesToSend, direccion)
 
-
+def recibirRespuestaS(bs):
+    msgServer = UDPClientSocket.recvfrom(bs) 
+    return str(msgServer[0]) 
 
 
 
@@ -54,6 +56,15 @@ if __name__ == '__main__':
             print("enviando mensaje")
             envioMsg(msgServer,serverAddressPort)
             print("esperando respuesta del servidor ")
+            respuesta = recibirRespuestaS(bufferSize) 
+            while(respuesta =="b'NAK'"):
+                print("Hubo una perdida del mensaje")
+                envioMsg(msgServer,serverAddressPort)
+                respuesta = recibirRespuestaS(bufferSize)
+                time.sleep(2)
+            if(respuesta=="b'ACK'"):
+                print("el mensaje se recibio con exito")
+                cont+=1
             
 
 
@@ -61,7 +72,11 @@ if __name__ == '__main__':
     
 
     #Envia mensaje de terminado al server
-    UDPClientSocket.sendto(str.encode("done" + idClient), serverAddressPort)
+    UDPClientSocket.sendto(str.encode("listo"), serverAddressPort)
+    os.system("clear")
+    print("-----------------------------------------------------------------------------")
+    texto = recibirRespuestaS(bufferSize)[2:]
+    print(texto)
 
 
 
