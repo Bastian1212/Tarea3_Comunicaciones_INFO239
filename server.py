@@ -58,11 +58,12 @@ while(True):
         
     else : 
         ## id del cliente con la cual estamos conversdando
+        print(ClientM[4])
         if str(ClientM)[4].isnumeric():
             idClientAct = int(ClientM[4])    
         else: 
             idClientAct = int(ClientM[7])   
-        
+        print(ClientM)
         if(ClientM!= "b'listo"+str(idClientAct)+"'"):
                
             caracter = str(ClientM[3])
@@ -78,11 +79,17 @@ while(True):
             print("se enviara el mensaje recibido")
             textonombre = ""
             lista=  nombres[idClientAct-1]
-            for i in lista:
-                textonombre+=i
-            envioMsg(textonombre, address)
-            nombres.pop(idClientAct-1)
-            print(nombres)
+            if(len(nombres)>=1):
+                for i in lista:
+                    textonombre+=i
+                envioMsg(textonombre, address)
+                nombres.pop(idClientAct-1)
+            idClientAct = 0 
+
+
+##b
+## 1b1
+## 2a1
 
 
 
