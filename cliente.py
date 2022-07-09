@@ -1,6 +1,15 @@
+from base64 import encode
 import socket
 import os
 import time
+
+def envioMsg(msg, direccion):
+    bytesToSend =str.encode(str(cont)+msg[0]+idClient)
+    UDPClientSocket.sendto(bytesToSend, direccion)
+
+
+
+
 
 msgFromClient       ="Using Link Client 1"
 bytesToSend         = str.encode(msgFromClient)
@@ -29,14 +38,27 @@ if __name__ == '__main__':
 
     os.system("clear")
     print("-----------------------------------------------------------------------------")
-    print("Cliente ", idClient)
+    print("Cliente : ", idClient)
     print("para finalizar escriba : terminar ")
 
-    while msgServer != "terminar":
+    msgServer = ""
+    cont = 1    
+    
+    while (msgServer != "terminar"):
 
         msgServer = str(input("Ingrese su nombre por caracter : ")).lower()
 
+        if (msgServer  != "terminar"):
+            
+            ## se envia el mensaje al servidor 
+            print("enviando mensaje")
+            envioMsg(msgServer,serverAddressPort)
+            print("esperando respuesta del servidor ")
+            
 
+
+
+    
 
     #Envia mensaje de terminado al server
     UDPClientSocket.sendto(str.encode("done" + idClient), serverAddressPort)

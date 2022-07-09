@@ -1,14 +1,14 @@
 import socket
 import time
 import random
-
+import os
 
 
 def reciboMsj(buff):
     bytesAddressPair = UDPServerSocket.recvfrom(bufferSize)
     return bytesAddressPair[0], bytesAddressPair[1]
 
-def enivioMsj(msj, direccion):
+def envioMsg(msj, direccion):
     bytesToSend = str.encode(msj)
     UDPServerSocket.sendto(bytesToSend, direccion)
 
@@ -18,7 +18,8 @@ MensajeNombre = ""
 ClientM =""
 idMen = 0 
 idClient = 0 
-idClientAct = 0 
+idClientAct = 0
+nombres = []
 
 
 
@@ -37,7 +38,7 @@ UDPServerSocket.bind((localIP, localPort))
 print("Server ok ")
 # peticiones que puede manejar en cola
 #UDPServerSocket.listen(N)
-
+time.sleep(1)
 
 # Listen for incoming datagrams
 while(True):
@@ -45,13 +46,30 @@ while(True):
     message,address = reciboMsj(bufferSize)
     ClientM = str(message)
     print("mensaje recibido")
-    
+    ## si se  conecta un cliente 
     if(ClientM == "b'conect'" ):
+        os.system("clear")
         print("conectando ")
         idClient+=1
         print("Id Client :",idClient)
-        enivioMsj(str(idClient),address)
-        
+        envioMsg(str(idClient),address)
+        ## agrega una lista a nuestra lista nombres donde se almacenaran los caracteres 
+        nombres.append([])
+        idClientAct = idClient
+    else : 
+        print(ClientM[3])
+        caracter = str(ClientM[3])
+        nombres[idClientAct-1] += caracter
+        print(nombres)
+
+        ## envia un mensaje de confirmacion al cliente
+        msgFromServer ="ACK"
+        print("enviando respuesta al cliente ")
+        envioMsg(msgFromServer,address)
+
+
+
+
 
 
 
