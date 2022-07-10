@@ -45,7 +45,7 @@ time.sleep(1)
 while(True):
     
     message,address = reciboMsj(bufferSize)
-    ClientM = str(message)
+    mensaje_decode = str(message)
     print("message: ", message)
     # decoded_message = json.load(message.decode())
     # print("decoded_message: ", decoded_message)
@@ -53,66 +53,58 @@ while(True):
 
     print("mensaje recibido")
     ## si se  conecta un cliente 
-    if(ClientM == 'connect' ):
+    if(mensaje_decode == 'connect' ):
         os.system("clear")
         print("conectando ")
         idClient+=1
-        print("Id Client :",idClient)
+        print("Id Client :", idClient)
         envioMsg(str(idClient),address)
+
         ## agrega una lista a nuestra lista nombres donde se almacenaran los caracteres 
         nombres.append([])
         
     else : 
-        mensaje_decode = ClientM
-        print("MENSJAEEEEE: ", mensaje_decode)
+        # Si el mensaje recibido es un objeto, quiere decir que se está enviando información
         if (mensaje_decode[0] == '{'):
             obj = json.loads(mensaje_decode) # {'idClient': '1', 'mensaje': 'd', 'palabra': '1'}
             obj_idClient = int(obj["idClient"])
             obj_mensaje = obj["mensaje"]
-            obj_palabra = int(obj["palabra"])
+            obj_numPalabra = int(obj["palabra"])
+        
+        # Si no es un objeto, quiere decir que el usuario se va a desconectar
         else:
-            print("-------------------------------------------------------------------------------")
-            print("Cayo en salida: ") 
             obj_mensaje = mensaje_decode
 
-
-
-
-        ## id del cliente con la cual estamos conversdando
-        print("id: ", obj_idClient)
-        print("mess: ", type(obj_mensaje))
-        print("palabra: ", obj_palabra)
-
-
-       
-
-
+        # Si no es el mensaje para terminar, se empieza a agregar los caracteres en la lista
         if(obj_mensaje!= "listo"+str(obj_idClient)):
-            
-            print("len: ", len(nombres[obj_idClient-1]))
-            print("obj_p")
 
+            # Si la lista del Cliente está vacía, se inserta el mensaje en la primera posicion
             if(not(bool(nombres[obj_idClient-1]))):
                 print("Vacio: ")
                 nombres[obj_idClient-1].insert(0, obj_mensaje)
-                
+            
             else:
-                if(obj_palabra > len(nombres[obj_idClient-1])):
+                # Si se quiere insertar otro mensaje, el primer caracter se almacenará en la siguiente posición de la lista
+                # de manera que quede de la siguiente forma: nombres = [ ["mensaje1", "mensaje2"], ["mensaje1", "mensaje2"] ]
+                #                                                           idCliente = 0               idCliente = 1
+
+                if(obj_numPalabra > len(nombres[obj_idClient-1])):
                     print("Cae en esto")
-                    nombres[obj_idClient-1].insert(obj_palabra-1, obj_mensaje)
-                    
+                    nombres[obj_idClient-1].insert(obj_numPalabra-1, obj_mensaje)
+
+                # Se van concatenando los caracteres en la lista .
                 else: 
-                    nombres[obj_idClient-1][obj_palabra-1] += obj_mensaje
+                    nombres[obj_idClient-1][obj_numPalabra-1] += obj_mensaje
                 
            
-            print("nombres insertado :", nombres)
+            print("nombres insertados :", nombres)
 
             ## envia un mensaje de confirmacion al cliente
             msgFromServer ="ACK"
             print("enviando respuesta al cliente ")
             envioMsg(msgFromServer,address)
         
-        
+        # Si el cliente desea terminar el proceso, el server le enviará los mensajes que el cliente había enviado.
         else:
             print("---------------------------------------")
             print("se enviara el mensaje recibido al cliente con ID = ", obj_idClient)
@@ -122,47 +114,3 @@ while(True):
                 print(f"Mensaje nº {i} es: {nombres[obj_idClient-1][i]}")
 
             envioMsg(texto, address)
-            
-
-
-##b
-## 1b1
-## 2a1
-
-
-
-
-
-
-
-    #perdida = random.randint(1,11)
-    #print("perdida: ", perdida)
-    # 30% de prob de que ocurra un error
-    # if(perdida <=3):
-    #     print("Error al recibir el paquete")
-    #     UDPServerSocket.sendto(msgError, address)
-    #     bytesAddressPair = UDPServerSocket.recvfrom(bufferSize)
-    #     message = bytesAddressPair[0] # mensaje recibido
-    #     address = bytesAddressPair[1] # (ip, puerto)
-    #     clientMsg = "Message from Client:{}".format(message)
-    #     print("Canal Ocupado")
-    #     clientMsg = format(message) 
-    #     print(clientMsg)
-
-    # clientMsg = "Message from Client:{}".format(message)
-    # print("Canal Ocupado")
-    # clientMsg = format(message) 
-    # print(clientMsg)
-    # time.sleep(30) # Segundos
-
-
-    # # Enviando respuesta al cliente
-    # UDPServerSocket.sendto(bytesToSend, address)
-    # print("bytesToSend: ", bytesToSend)
-    
-
-
-    # print("Link Available")
-
-
-

@@ -2,16 +2,26 @@ from base64 import encode
 import socket
 import os
 import time
+import json
 
 def envioMsg(msg, direccion):
-    bytesToSend =str.encode(str(cont)+msg[0]+idClient)
+    obj = {
+        'idClient' : idClient,
+        'mensaje': msg[0],
+        'palabra': str(cont)
+    }
+
+    # A = [[]]
+    converted_obj = json.dumps(obj)
+    bytesToSend = converted_obj.encode()
     UDPClientSocket.sendto(bytesToSend, direccion)
 
 def recibirRespuestaS(bs):
     msgServer = UDPClientSocket.recvfrom(bs) 
-    return str(msgServer[0]) 
+    return str(msgServer[0].decode()) 
 
-
+# b'1a1'
+# b'10a1'
 
 msgFromClient       ="Using Link Client 1"
 bytesToSend         = str.encode(msgFromClient)
@@ -25,7 +35,7 @@ UDPClientSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
 
 print("Enviando ping al servidor")
 #Envía ping a servidor
-bytesToSend = str.encode("conect")
+bytesToSend = str.encode("connect")
 UDPClientSocket.sendto(bytesToSend, serverAddressPort)
 
 print("Recibiendo respuesta del servidor")
@@ -46,27 +56,29 @@ if __name__ == '__main__':
     print("para finalizar escriba : terminar ")
 
     msgServer = ""
-    cont = 1    
+    cont = 0
     
     while (msgServer != "terminar"):
 
         msgServer = str(input("Ingrese su nombre  : ")).lower()
-
+        cont += 1
         if (msgServer  != "terminar"):
-            
-            for i in msgServer : 
+            for caracter in msgServer : 
                 print("enviando mensaje")
-                envioMsg(i,serverAddressPort)
+                envioMsg(caracter,serverAddressPort)
+
                 print("esperando respuesta del servidor ")
                 respuesta = recibirRespuestaS(bufferSize) 
+
                 while(respuesta =="b'NAK'"):
                     print("Hubo una perdida del mensaje")
-                    envioMsg(i,serverAddressPort)
+                    envioMsg(caracter,serverAddressPort)
                     respuesta = recibirRespuestaS(bufferSize)
                     time.sleep(2)
+
                 if(respuesta=="b'ACK'"):
                     print("el mensaje se recibio con exito")
-                    cont+=1
+                    
                 time.sleep(2)
                 
 
@@ -78,7 +90,10 @@ if __name__ == '__main__':
     UDPClientSocket.sendto(str.encode("listo"+ idClient), serverAddressPort)
     os.system("clear")
     print("-----------------------------------------------------------------------------")
-    texto = recibirRespuestaS(bufferSize)[2:]
+    print("Proceso Terminado")
+    print("-----------------------------------------------------------------------------")
+
+    texto = recibirRespuestaS(bufferSize)
     print(texto)
 
 
