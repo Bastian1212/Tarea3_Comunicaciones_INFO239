@@ -70,15 +70,15 @@ if __name__ == '__main__':
                 print("esperando respuesta del servidor ")
                 respuesta = recibirRespuestaS(bufferSize) 
 
-                while(respuesta =="b'NAK'"):
-                    print("Hubo una perdida del mensaje")
+                while(respuesta =="NAK"):
+                    print("Hubo una perdida del mensaje\n")
                     envioMsg(caracter,serverAddressPort)
                     respuesta = recibirRespuestaS(bufferSize)
                     time.sleep(2)
 
-                if(respuesta=="b'ACK'"):
-                    print("el mensaje se recibio con exito")
-                    cont += 1
+                if(respuesta=="ACK"):
+                    print("el mensaje se recibio con exito\n")
+                    
                     
                 time.sleep(2)
                 
@@ -88,6 +88,8 @@ if __name__ == '__main__':
     
 
     #Envia mensaje de terminado al server
+
+    
     UDPClientSocket.sendto(str.encode("listo"+ idClient), serverAddressPort)
     os.system("clear")
     print("-----------------------------------------------------------------------------")
