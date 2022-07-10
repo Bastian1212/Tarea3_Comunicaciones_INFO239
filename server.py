@@ -5,13 +5,13 @@ import random
 import os
 import json
 
-def reciboMsj(buff):
-    bytesAddressPair = UDPServerSocket.recvfrom(bufferSize)
-    return bytesAddressPair[0], bytesAddressPair[1]
-
 def envioMsg(msj, direccion):
     bytesToSend = str.encode(msj)
     UDPServerSocket.sendto(bytesToSend, direccion)
+
+def reciboMsj(buff):
+    bytesAddressPair = UDPServerSocket.recvfrom(bufferSize)
+    return bytesAddressPair[0].decode(), bytesAddressPair[1]
 
 
 
@@ -53,7 +53,7 @@ while(True):
 
     print("mensaje recibido")
     ## si se  conecta un cliente 
-    if(ClientM == "b'conect'" ):
+    if(ClientM == 'connect' ):
         os.system("clear")
         print("conectando ")
         idClient+=1
@@ -63,7 +63,7 @@ while(True):
         nombres.append([])
         
     else : 
-        mensaje_decode = ClientM[2:len(ClientM)-1]
+        mensaje_decode = ClientM
         print("MENSJAEEEEE: ", mensaje_decode)
         if (mensaje_decode[0] == '{'):
             obj = json.loads(mensaje_decode) # {'idClient': '1', 'mensaje': 'd', 'palabra': '1'}
@@ -84,11 +84,7 @@ while(True):
         print("palabra: ", obj_palabra)
 
 
-        # if str(ClientM)[3].isnumeric():
-        #     idClientAct = int(ClientM[3])    
-        # else: 
-        #     idClientAct = int(ClientM[7])   
-        # print(ClientM)
+       
 
 
         if(obj_mensaje!= "listo"+str(obj_idClient)):
@@ -122,9 +118,9 @@ while(True):
             print("se enviara el mensaje recibido al cliente con ID = ", obj_idClient)
             texto = ""
             for i in range(len(nombres[obj_idClient-1])):
-                texto += "Mensaje nº " + str(i) + "es: " + str(nombres[obj_idClient-1][i]) + "\n"
-                
+                texto += "Mensaje nº " + str(i) + " es: " + str(nombres[obj_idClient-1][i]) + "\n"
                 print(f"Mensaje nº {i} es: {nombres[obj_idClient-1][i]}")
+
             envioMsg(texto, address)
             
 

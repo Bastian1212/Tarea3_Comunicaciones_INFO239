@@ -18,7 +18,7 @@ def envioMsg(msg, direccion):
 
 def recibirRespuestaS(bs):
     msgServer = UDPClientSocket.recvfrom(bs) 
-    return str(msgServer[0]) 
+    return str(msgServer[0].decode()) 
 
 # b'1a1'
 # b'10a1'
@@ -35,7 +35,7 @@ UDPClientSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
 
 print("Enviando ping al servidor")
 #Envía ping a servidor
-bytesToSend = str.encode("conect")
+bytesToSend = str.encode("connect")
 UDPClientSocket.sendto(bytesToSend, serverAddressPort)
 
 print("Recibiendo respuesta del servidor")
@@ -90,6 +90,9 @@ if __name__ == '__main__':
     UDPClientSocket.sendto(str.encode("listo"+ idClient), serverAddressPort)
     os.system("clear")
     print("-----------------------------------------------------------------------------")
+    print("Proceso Terminado")
+    print("-----------------------------------------------------------------------------")
+
     texto = recibirRespuestaS(bufferSize)
     print(texto)
 
