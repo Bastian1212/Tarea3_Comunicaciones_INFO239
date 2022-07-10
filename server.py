@@ -12,6 +12,16 @@ def envioMsg(msj, direccion):
     bytesToSend = str.encode(msj)
     UDPServerSocket.sendto(bytesToSend, direccion)
 
+def generadorDePerdida():
+    perdida =random.randint(1,11)
+    time = 0
+    if perdida <= 3:
+        time = random.randint(2001,3000)/1000
+    else: 
+        time = random.randint(500,3000)/1000
+    
+    return time
+
 
 
 MensajeNombre = ""
@@ -58,18 +68,20 @@ while(True):
         
     else : 
         ## id del cliente con la cual estamos conversdando
-        print(ClientM[4])
+       
         if str(ClientM)[4].isnumeric():
             idClientAct = int(ClientM[4])    
         else: 
             idClientAct = int(ClientM[7])   
-        print(ClientM)
+        
         if(ClientM!= "b'listo"+str(idClientAct)+"'"):
                
             caracter = str(ClientM[3])
             nombres[idClientAct-1] += caracter
             print(nombres)
-
+            print(generadorDePerdida())
+            tiempo = generadorDePerdida()
+            time.sleep(tiempo)    
             ## envia un mensaje de confirmacion al cliente
             msgFromServer ="ACK"
             print("enviando respuesta al cliente ")
@@ -84,46 +96,5 @@ while(True):
                     textonombre+=i
                 envioMsg(textonombre, address)
             idClientAct = 0 
-
-
-##b
-## 1b1
-## 2a1
-
-
-
-
-
-
-
-    #perdida = random.randint(1,11)
-    #print("perdida: ", perdida)
-    # 30% de prob de que ocurra un error
-    # if(perdida <=3):
-    #     print("Error al recibir el paquete")
-    #     UDPServerSocket.sendto(msgError, address)
-    #     bytesAddressPair = UDPServerSocket.recvfrom(bufferSize)
-    #     message = bytesAddressPair[0] # mensaje recibido
-    #     address = bytesAddressPair[1] # (ip, puerto)
-    #     clientMsg = "Message from Client:{}".format(message)
-    #     print("Canal Ocupado")
-    #     clientMsg = format(message) 
-    #     print(clientMsg)
-
-    # clientMsg = "Message from Client:{}".format(message)
-    # print("Canal Ocupado")
-    # clientMsg = format(message) 
-    # print(clientMsg)
-    # time.sleep(30) # Segundos
-
-
-    # # Enviando respuesta al cliente
-    # UDPServerSocket.sendto(bytesToSend, address)
-    # print("bytesToSend: ", bytesToSend)
-    
-
-
-    # print("Link Available")
-
 
 

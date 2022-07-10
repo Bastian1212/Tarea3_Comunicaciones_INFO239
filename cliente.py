@@ -65,6 +65,7 @@ if __name__ == '__main__':
                     respuesta = recibirRespuestaS(bufferSize)
                     time.sleep(2)
                 if(respuesta=="b'ACK'"):
+                    os.system("clear")
                     print("el mensaje se recibio con exito")
                     cont+=1
                 time.sleep(2)
