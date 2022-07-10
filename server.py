@@ -83,7 +83,6 @@ while(True):
                 for i in lista:
                     textonombre+=i
                 envioMsg(textonombre, address)
-                nombres.pop(idClientAct-1)
             idClientAct = 0 
 
 
