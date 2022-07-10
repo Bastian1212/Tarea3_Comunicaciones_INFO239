@@ -78,6 +78,7 @@ if __name__ == '__main__':
 
                 if(respuesta=="b'ACK'"):
                     print("el mensaje se recibio con exito")
+                    cont += 1
                     
                 time.sleep(2)
                 

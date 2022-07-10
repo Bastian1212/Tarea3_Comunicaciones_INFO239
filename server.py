@@ -14,6 +14,17 @@ def reciboMsj(buff):
     return bytesAddressPair[0].decode(), bytesAddressPair[1]
 
 
+def generadorDePerdida():
+    perdida =random.randint(1,11)
+    time = 0
+    if perdida <= 3:
+        time = random.randint(2001,3000)/1000
+    else: 
+        time = random.randint(500,2000)/1000
+    
+    return time
+
+
 
 MensajeNombre = ""
 ClientM =""
@@ -63,6 +74,23 @@ while(True):
         nombres.append([])
         
     else : 
+
+        ####################################################################################################################
+        tiempo = generadorDePerdida()
+        print("tiempo perdida",tiempo)
+        while(tiempo>=2):
+            tiempo = generadorDePerdida()
+            time.sleep(tiempo)
+            print("se realizo perdida ")
+            print()
+            print("enviando aviso al  cliente")
+            msgFromServer ="NAK"
+            envioMsg(msgFromServer,address)
+            print()
+            print("esperando data del cliente")
+            message,address = reciboMsj(bufferSize)
+            
+
         mensaje_decode = ClientM
         print("MENSJAEEEEE: ", mensaje_decode)
         if (mensaje_decode[0] == '{'):
@@ -88,7 +116,7 @@ while(True):
 
 
         if(obj_mensaje!= "listo"+str(obj_idClient)):
-            
+
             print("len: ", len(nombres[obj_idClient-1]))
             print("obj_p")
 
