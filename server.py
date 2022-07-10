@@ -1,8 +1,9 @@
+from base64 import decode
 import socket
 import time
 import random
 import os
-
+import json
 
 def reciboMsj(buff):
     bytesAddressPair = UDPServerSocket.recvfrom(bufferSize)
@@ -45,8 +46,13 @@ while(True):
     
     message,address = reciboMsj(bufferSize)
     ClientM = str(message)
+    print("message: ", message)
+    # decoded_message = json.load(message.decode())
+    # print("decoded_message: ", decoded_message)
+
+
     print("mensaje recibido")
-    ## si se  conecta un cliente nuevo
+    ## si se  conecta un cliente 
     if(ClientM == "b'conect'" ):
         os.system("clear")
         print("conectando ")
@@ -55,59 +61,77 @@ while(True):
         envioMsg(str(idClient),address)
         ## agrega una lista a nuestra lista nombres donde se almacenaran los caracteres 
         nombres.append([])
-    
-    # Empieza a recibir mensajes    
-    else : 
-        ## id del cliente con la cual estamos conversando
-        # Si es un caracter, el id estara en la pos 4
-        if str(ClientM)[4].isnumeric():
-            idClientAct = int(ClientM[4])    
-
-        # Si se quiere terminar el proceso, se recibira un mensaje mas 
-        # largo por lo que el id estara en la pos 7
-        else: 
-            idClientAct = int(ClientM[7])   
         
-        # Si el mensaje recibido no es de la formato para terminar el proceso,
-        # se recibe el mensaje y se envia un ACK
-        if(ClientM!= "b'listo"+str(idClientAct)+"'"):
-            caracter = str(ClientM[3])
+    else : 
+        mensaje_decode = ClientM[2:len(ClientM)-1]
+        print("MENSJAEEEEE: ", mensaje_decode)
+        if (mensaje_decode[0] == '{'):
+            obj = json.loads(mensaje_decode) # {'idClient': '1', 'mensaje': 'd', 'palabra': '1'}
+            obj_idClient = int(obj["idClient"])
+            obj_mensaje = obj["mensaje"]
+            obj_palabra = int(obj["palabra"])
+        else:
+            print("-------------------------------------------------------------------------------")
+            print("Cayo en salida: ") 
+            obj_mensaje = mensaje_decode
 
-            if(idClientAct>len(nombres)):
-                nombres[idClientAct-2] += caracter
-                print(nombres)
+
+
+
+        ## id del cliente con la cual estamos conversdando
+        print("id: ", obj_idClient)
+        print("mess: ", type(obj_mensaje))
+        print("palabra: ", obj_palabra)
+
+
+        # if str(ClientM)[3].isnumeric():
+        #     idClientAct = int(ClientM[3])    
+        # else: 
+        #     idClientAct = int(ClientM[7])   
+        # print(ClientM)
+
+
+        if(obj_mensaje!= "listo"+str(obj_idClient)):
+            
+            print("len: ", len(nombres[obj_idClient-1]))
+            print("obj_p")
+
+            if(not(bool(nombres[obj_idClient-1]))):
+                print("Vacio: ")
+                nombres[obj_idClient-1].insert(0, obj_mensaje)
+                
             else:
-                nombres[idClientAct-1] += caracter
-                print(nombres)
-            
-            
-
-# A = [ [] ] id = 2  / len = 1
-# 
+                if(obj_palabra > len(nombres[obj_idClient-1])):
+                    print("Cae en esto")
+                    nombres[obj_idClient-1].insert(obj_palabra-1, obj_mensaje)
+                    
+                else: 
+                    nombres[obj_idClient-1][obj_palabra-1] += obj_mensaje
+                
+           
+            print("nombres insertado :", nombres)
 
             ## envia un mensaje de confirmacion al cliente
             msgFromServer ="ACK"
             print("enviando respuesta al cliente ")
             envioMsg(msgFromServer,address)
-        # Si el mensaje recibido es del formato "terminar proceso", se entrega
-        # el mensaje al usuario y se elimina de la memoria.
+        
+        
         else:
-            if(idClientAct>len(nombres)):
-                aux = 2
-            else:
-                aux = 1
+            print("---------------------------------------")
+            print("se enviara el mensaje recibido al cliente con ID = ", obj_idClient)
+            texto = ""
+            for i in range(len(nombres[obj_idClient-1])):
+                texto += "Mensaje nº " + str(i) + "es: " + str(nombres[obj_idClient-1][i]) + "\n"
+                
+                print(f"Mensaje nº {i} es: {nombres[obj_idClient-1][i]}")
+            envioMsg(texto, address)
+            
 
-            print("se enviara el mensaje recibido")
-            textonombre = ""
-            lista = nombres[idClientAct-aux]
-            if(len(nombres)>=1):
-                for i in lista:
-                    textonombre+=i
-                envioMsg(textonombre, address)
-                # Se elimina el mensaje del server
-                nombres.pop(idClientAct-aux)
-            print(nombres)
-            idClientAct = 0 
+
+##b
+## 1b1
+## 2a1
 
 
 
