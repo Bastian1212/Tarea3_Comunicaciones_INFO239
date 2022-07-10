@@ -18,7 +18,7 @@ def generadorDePerdida():
     if perdida <= 3:
         time = random.randint(2001,3000)/1000
     else: 
-        time = random.randint(500,3000)/1000
+        time = random.randint(500,2000)/1000
     
     return time
 
@@ -69,23 +69,39 @@ while(True):
     else : 
         ## id del cliente con la cual estamos conversdando
        
-        if str(ClientM)[4].isnumeric():
-            idClientAct = int(ClientM[4])    
+        if str(ClientM)[3].isnumeric():
+            idClientAct = int(ClientM[3])    
         else: 
             idClientAct = int(ClientM[7])   
         
         if(ClientM!= "b'listo"+str(idClientAct)+"'"):
                
-            caracter = str(ClientM[3])
+           
+            tiempo = generadorDePerdida()
+            print(tiempo)
+            time.sleep(tiempo)    
+
+            while(tiempo>=2):
+                tiempo = generadorDePerdida()
+                time.sleep(tiempo)
+                print("se realizo perdida ")
+                print()
+                print("enviando aviso al  cliente")
+                msgFromServer ="NAK"
+                envioMsg(msgFromServer,address)
+                print()
+                print("esperando data del cliente")
+                message,address = reciboMsj(bufferSize)
+            caracter = str(ClientM[2])
             nombres[idClientAct-1] += caracter
             print(nombres)
-            print(generadorDePerdida())
-            tiempo = generadorDePerdida()
-            time.sleep(tiempo)    
+
+
             ## envia un mensaje de confirmacion al cliente
             msgFromServer ="ACK"
             print("enviando respuesta al cliente ")
             envioMsg(msgFromServer,address)
+            print("---------------------------------------------------------------")
         else:
            
             print("se enviara el mensaje recibido")

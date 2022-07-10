@@ -4,7 +4,7 @@ import os
 import time
 
 def envioMsg(msg, direccion):
-    bytesToSend =str.encode(str(cont)+msg[0]+idClient)
+    bytesToSend =str.encode(msg[0]+idClient)
     UDPClientSocket.sendto(bytesToSend, direccion)
 
 def recibirRespuestaS(bs):
@@ -23,7 +23,7 @@ UDPClientSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
 
 
 
-print("Enviando ping al servidor")
+print("esperando servidor")
 #Envía ping a servidor
 bytesToSend = str.encode("conect")
 UDPClientSocket.sendto(bytesToSend, serverAddressPort)
@@ -63,7 +63,7 @@ if __name__ == '__main__':
                     print("Hubo una perdida del mensaje")
                     envioMsg(i,serverAddressPort)
                     respuesta = recibirRespuestaS(bufferSize)
-                    time.sleep(2)
+                   
                 if(respuesta=="b'ACK'"):
                     os.system("clear")
                     print("el mensaje se recibio con exito")
