@@ -89,33 +89,34 @@ while(True):
             print()
             print("esperando data del cliente")
             message,address = reciboMsj(bufferSize)
-            
-
+            ClientM = str(message)
+        
         mensaje_decode = ClientM
         print("MENSJAEEEEE: ", mensaje_decode)
-        if (mensaje_decode[0] == '{'):
-            obj = json.loads(mensaje_decode) # {'idClient': '1', 'mensaje': 'd', 'palabra': '1'}
+        obj = json.loads(mensaje_decode) # {'idClient': '1', 'mensaje': 'd', 'palabra': '1'}
+        print("obj :  ",obj)
+
+        if (len(mensaje_decode)==3):
+            
             obj_idClient = int(obj["idClient"])
             obj_mensaje = obj["mensaje"]
             obj_palabra = int(obj["palabra"])
         else:
-            print("-------------------------------------------------------------------------------")
-            print("Cayo en salida: ") 
-            obj_mensaje = mensaje_decode
+            obj_idClient = int(obj["idClient"])
+            obj_mensaje = obj["mensaje"] 
+            
 
 
 
 
         ## id del cliente con la cual estamos conversdando
-        print("id: ", obj_idClient)
-        print("mess: ", type(obj_mensaje))
-        print("palabra: ", obj_palabra)
+        
 
 
        
 
-
-        if(obj_mensaje!= "listo"+str(obj_idClient)):
+        print("obj men ",obj_mensaje)
+        if(obj_mensaje!= "terminar"):
 
             print("len: ", len(nombres[obj_idClient-1]))
             print("obj_p")
@@ -125,6 +126,8 @@ while(True):
                 nombres[obj_idClient-1].insert(0, obj_mensaje)
                 
             else:
+                print(f'obj_palabra: {obj_palabra} \n lenNombre: {len(nombres[obj_idClient-1])} \n idCLient : {obj_idClient}')
+
                 if(obj_palabra > len(nombres[obj_idClient-1])):
                     print("Cae en esto")
                     nombres[obj_idClient-1].insert(obj_palabra-1, obj_mensaje)
@@ -142,6 +145,9 @@ while(True):
         
         
         else:
+            msgFromServer ="ACK"
+            envioMsg(msgFromServer,address)
+        
             print("---------------------------------------")
             print("se enviara el mensaje recibido al cliente con ID = ", obj_idClient)
             texto = ""

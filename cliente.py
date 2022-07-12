@@ -16,12 +16,21 @@ def envioMsg(msg, direccion):
     bytesToSend = converted_obj.encode()
     UDPClientSocket.sendto(bytesToSend, direccion)
 
+def envioMsgTerminar(msg, direccion):
+    obj = {
+        'idClient' : idClient,
+        'mensaje': msg
+    }
+
+    converted_obj = json.dumps(obj)
+    bytesToSend = converted_obj.encode()
+    UDPClientSocket.sendto(bytesToSend, direccion)
+    
 def recibirRespuestaS(bs):
     msgServer = UDPClientSocket.recvfrom(bs) 
     return str(msgServer[0].decode()) 
 
-# b'1a1'
-# b'10a1'
+
 
 msgFromClient       ="Using Link Client 1"
 bytesToSend         = str.encode(msgFromClient)
@@ -89,16 +98,23 @@ if __name__ == '__main__':
 
     #Envia mensaje de terminado al server
 
+    envioMsgTerminar("terminar",serverAddressPort)
+    respuesta = recibirRespuestaS(bufferSize)
+    while(respuesta =="NAK"):
+        print("Hubo una perdida del mensaje\n")
+        envioMsgTerminar("terminar",serverAddressPort)
+        respuesta = recibirRespuestaS(bufferSize)
+    if(respuesta=="ACK"):
+
+
+        os.system("clear")
+        print("-----------------------------------------------------------------------------")
+        print("Proceso Terminado")
+        print("-----------------------------------------------------------------------------")
+
+        texto = recibirRespuestaS(bufferSize)
+        print(texto)
     
-    UDPClientSocket.sendto(str.encode("listo"+ idClient), serverAddressPort)
-    os.system("clear")
-    print("-----------------------------------------------------------------------------")
-    print("Proceso Terminado")
-    print("-----------------------------------------------------------------------------")
-
-    texto = recibirRespuestaS(bufferSize)
-    print(texto)
-
 
 
 
