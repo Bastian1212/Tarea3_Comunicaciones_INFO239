@@ -13,7 +13,6 @@ def reciboMsj(buff):
     bytesAddressPair = UDPServerSocket.recvfrom(bufferSize)
     return bytesAddressPair[0].decode(), bytesAddressPair[1]
 
-
 def generadorDePerdida():
     perdida =random.randint(1,11)
     time = 0
@@ -21,16 +20,11 @@ def generadorDePerdida():
         time = random.randint(2001,3000)/1000
     else: 
         time = random.randint(500,2000)/1000
-    
     return time
 
 
-
-MensajeNombre = ""
-ClientM =""
-idMen = 0 
+# Variables globales para controlar los id de los clientes y los mensajes que se recibirán, 
 idClient = 0 
-idClientAct = 0
 nombres = []
 
 
@@ -49,22 +43,17 @@ UDPServerSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
 UDPServerSocket.bind((localIP, localPort))
 print("Server ok ")
 # peticiones que puede manejar en cola
-#UDPServerSocket.listen(N)
 time.sleep(1)
 
 # Listen for incoming datagrams
 while(True):
     
     message,address = reciboMsj(bufferSize)
-    ClientM = str(message)
-   
-    # decoded_message = json.load(message.decode())
-    # print("decoded_message: ", decoded_message)
-
-
+    mensaje_decode = str(message)
     print("mensaje recibido")
+
     ## si se  conecta un cliente 
-    if(ClientM == 'connect' ):
+    if(mensaje_decode == 'connect' ):
         os.system("clear")
         print("conectando ")
         idClient+=1
@@ -74,51 +63,40 @@ while(True):
         nombres.append([])
         
     else : 
-
-        ####################################################################################################################
         tiempo = generadorDePerdida()
         print("tiempo perdida",tiempo)
         while(tiempo>=2):
             tiempo = generadorDePerdida()
             time.sleep(tiempo)
-            print("se realizo perdida ")
-            print()
-            print("enviando aviso al  cliente")
+            print("se realizo perdida \n")
+
+            print("enviando aviso al  cliente \n")
             msgFromServer ="NAK"
             envioMsg(msgFromServer,address)
-            print()
-            print("esperando data del cliente")
+            print("esperando data del cliente \n")
+
             message,address = reciboMsj(bufferSize)
-            ClientM = str(message)
+            mensaje_decode = str(message)
         
-        mensaje_decode = ClientM
         obj = json.loads(mensaje_decode) # {'idClient': '1', 'mensaje': 'd', 'palabra': '1'}
-        print("-------------------------------------------------------")
-        print("obj :  ",obj)
-        print("largo objeto : ", len(obj))
-        print("-------------------------------------------------------")
 
         if (len(obj) == 3):
             obj_idClient = int(obj["idClient"])
             obj_mensaje = obj["mensaje"]
             obj_palabra = int(obj["palabra"])
 
-           
         else:
             obj_idClient = int(obj["idClient"])
             obj_mensaje = obj["mensaje"] 
  
             
-        ## id del cliente con la cual estamos conversdando
-        print("obj men ", type(obj_mensaje))
-        print("IDCLIENTE: ", obj_idClient)
+        ## id del cliente con la cual estamos conversando
         if(obj_mensaje != "terminar"):
             if(not(bool(nombres[obj_idClient-1]))):
                 print("Vacio: ")
                 nombres[obj_idClient-1].insert(0, obj_mensaje)
                 
             else:
-                #print(f'obj_palabra: {obj_palabra} \n lenNombre: {len(nombres[obj_idClient-1])} \n idCLient : {obj_idClient}')
 
                 if(obj_palabra > len(nombres[obj_idClient-1])):
                     print("Cae en esto")
@@ -126,15 +104,13 @@ while(True):
                     
                 else: 
                     nombres[obj_idClient-1][obj_palabra-1] += obj_mensaje
-                
-           
+
             print("nombres insertado :", nombres)
 
             ## envia un mensaje de confirmacion al cliente
             msgFromServer ="ACK"
             print("enviando respuesta al cliente ")
             envioMsg(msgFromServer,address)
-        
         
         else:
             msgFromServer ="ACK"

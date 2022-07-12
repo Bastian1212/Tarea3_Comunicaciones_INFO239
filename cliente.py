@@ -90,28 +90,20 @@ if __name__ == '__main__':
                     
                     
                 time.sleep(2)
-                
-
-
-
-    
 
     #Envia mensaje de terminado al server
-
     envioMsgTerminar("terminar",serverAddressPort)
     respuesta = recibirRespuestaS(bufferSize)
     while(respuesta =="NAK"):
         print("Hubo una perdida del mensaje\n")
         envioMsgTerminar("terminar",serverAddressPort)
         respuesta = recibirRespuestaS(bufferSize)
+
     if(respuesta=="ACK"):
-
-
         os.system("clear")
         print("-----------------------------------------------------------------------------")
         print("Proceso Terminado")
         print("-----------------------------------------------------------------------------")
-
         texto = recibirRespuestaS(bufferSize)
         print(texto)
     
