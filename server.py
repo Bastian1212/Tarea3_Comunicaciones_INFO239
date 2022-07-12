@@ -57,7 +57,7 @@ while(True):
     
     message,address = reciboMsj(bufferSize)
     ClientM = str(message)
-    print("message: ", message)
+   
     # decoded_message = json.load(message.decode())
     # print("decoded_message: ", decoded_message)
 
@@ -92,41 +92,33 @@ while(True):
             ClientM = str(message)
         
         mensaje_decode = ClientM
-        print("MENSJAEEEEE: ", mensaje_decode)
         obj = json.loads(mensaje_decode) # {'idClient': '1', 'mensaje': 'd', 'palabra': '1'}
+        print("-------------------------------------------------------")
         print("obj :  ",obj)
+        print("largo objeto : ", len(obj))
+        print("-------------------------------------------------------")
 
-        if (len(mensaje_decode)==3):
-            
+        if (len(obj) == 3):
             obj_idClient = int(obj["idClient"])
             obj_mensaje = obj["mensaje"]
             obj_palabra = int(obj["palabra"])
+
+           
         else:
             obj_idClient = int(obj["idClient"])
             obj_mensaje = obj["mensaje"] 
+ 
             
-
-
-
-
         ## id del cliente con la cual estamos conversdando
-        
-
-
-       
-
-        print("obj men ",obj_mensaje)
-        if(obj_mensaje!= "terminar"):
-
-            print("len: ", len(nombres[obj_idClient-1]))
-            print("obj_p")
-
+        print("obj men ", type(obj_mensaje))
+        print("IDCLIENTE: ", obj_idClient)
+        if(obj_mensaje != "terminar"):
             if(not(bool(nombres[obj_idClient-1]))):
                 print("Vacio: ")
                 nombres[obj_idClient-1].insert(0, obj_mensaje)
                 
             else:
-                print(f'obj_palabra: {obj_palabra} \n lenNombre: {len(nombres[obj_idClient-1])} \n idCLient : {obj_idClient}')
+                #print(f'obj_palabra: {obj_palabra} \n lenNombre: {len(nombres[obj_idClient-1])} \n idCLient : {obj_idClient}')
 
                 if(obj_palabra > len(nombres[obj_idClient-1])):
                     print("Cae en esto")
@@ -150,53 +142,15 @@ while(True):
         
             print("---------------------------------------")
             print("se enviara el mensaje recibido al cliente con ID = ", obj_idClient)
+            dirUserMessages = len(nombres[obj_idClient-1])
             texto = ""
-            for i in range(len(nombres[obj_idClient-1])):
-                texto += "Mensaje nº " + str(i) + " es: " + str(nombres[obj_idClient-1][i]) + "\n"
-                print(f"Mensaje nº {i} es: {nombres[obj_idClient-1][i]}")
+            if (dirUserMessages != 0):
+                for i in range(dirUserMessages):
+                    texto += "Mensaje nº " + str(i) + " es: " + str(nombres[obj_idClient-1][i]) + "\n"
+                    print(f"Mensaje nº {i} es: {nombres[obj_idClient-1][i]}")
+            else:
+                texto = "El usuario no envió mensajes"
 
             envioMsg(texto, address)
             
-
-
-##b
-## 1b1
-## 2a1
-
-
-
-
-
-
-
-    #perdida = random.randint(1,11)
-    #print("perdida: ", perdida)
-    # 30% de prob de que ocurra un error
-    # if(perdida <=3):
-    #     print("Error al recibir el paquete")
-    #     UDPServerSocket.sendto(msgError, address)
-    #     bytesAddressPair = UDPServerSocket.recvfrom(bufferSize)
-    #     message = bytesAddressPair[0] # mensaje recibido
-    #     address = bytesAddressPair[1] # (ip, puerto)
-    #     clientMsg = "Message from Client:{}".format(message)
-    #     print("Canal Ocupado")
-    #     clientMsg = format(message) 
-    #     print(clientMsg)
-
-    # clientMsg = "Message from Client:{}".format(message)
-    # print("Canal Ocupado")
-    # clientMsg = format(message) 
-    # print(clientMsg)
-    # time.sleep(30) # Segundos
-
-
-    # # Enviando respuesta al cliente
-    # UDPServerSocket.sendto(bytesToSend, address)
-    # print("bytesToSend: ", bytesToSend)
-    
-
-
-    # print("Link Available")
-
-
 
