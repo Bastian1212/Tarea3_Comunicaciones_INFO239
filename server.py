@@ -5,14 +5,25 @@ import random
 import os
 import json
 
+'''
+    Integrantes: Diego Troncoso Jara y Bastián Villanueva
+    Curso: Comunicaciones
+    Profesor: Cristian Lazo
+
+'''
+
+
+# Se envia el mensaje al cliente
 def envioMsg(msj, direccion):
     bytesToSend = str.encode(msj)
     UDPServerSocket.sendto(bytesToSend, direccion)
 
+# Recibe el mensaje del cliente
 def reciboMsj(buff):
     bytesAddressPair = UDPServerSocket.recvfrom(bufferSize)
     return bytesAddressPair[0].decode(), bytesAddressPair[1]
 
+# Genera la pérdida de los mensajes
 def generadorDePerdida():
     perdida =random.randint(1,11)
     time = 0
@@ -62,6 +73,7 @@ while(True):
         nombres.append([])
         
     else : 
+        # Se genera la pérdida del mensaje y se envía un NAK
         tiempo = generadorDePerdida()
         print("Tiempo perdida",tiempo)
         while(tiempo>=2):
